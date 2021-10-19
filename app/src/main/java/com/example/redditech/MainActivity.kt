@@ -1,15 +1,23 @@
 package com.example.redditech
 
+import android.content.ContentValues.TAG
+import android.content.Intent
+import android.net.Uri
+import android.net.wifi.rtt.CivicLocationKeys
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.example.redditech.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+import android.net.wifi.rtt.CivicLocationKeys.STATE
+import android.util.Log
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,5 +62,45 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    private val _authUrl = "https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
+            "&response_type=code&state=%s&redirect_uri=%s&" +
+            "duration=permanent&scope=identity"
+
+    private val _clientId = "pCYkCQhXhtAZ8AHGHGgzuA"
+
+    private val _redirectUri = "http://www.reditech.local/my_redirect"
+
+    private val _state = "authorize"
+
+    private val _accessTokenUrl = "https://www.reddit.com/api/v1/access_token"
+
+    fun startSignIn(view: View?) {
+        val url: String = java.lang.String.format(
+            _authUrl,
+            _clientId,
+            _state,
+            _redirectUri
+        )
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (intent != null && intent.action == Intent.ACTION_VIEW) {
+            val uri = intent.data
+            if (uri!!.getQueryParameter("error") != null) {
+                val error = uri.getQueryParameter("error")
+                Log.e(TAG, "An error has occurred : $error")
+            } else {
+                val state = uri.getQueryParameter("state")
+                if (state == _state) {
+                    val code = uri.getQueryParameter("code")
+                    println("Mon token: $code")
+                }
+            }
+        }
     }
 }
