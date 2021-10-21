@@ -10,9 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Redditech">
         <activity
-            android:name=".SignInActivity"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
