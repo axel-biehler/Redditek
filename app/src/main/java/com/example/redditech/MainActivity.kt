@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
+const val PRINCIPALE = "com.example.redditech.PRINCIPALE"
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,10 @@ class MainActivity : AppCompatActivity() {
                 if (state == _state) {
                     val code = uri.getQueryParameter("code")
                     println("token : $code")
+                    val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
+                        intent.putExtra("token", code);
+                    }
+                    startActivity(intent);
                 }
             }
         }
