@@ -8,17 +8,19 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
-const val PRINCIPALE = "com.example.redditech.PRINCIPALE"
+import okhttp3.*
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
 
-    private val _authUrl = "https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
-            "&response_type=code&state=%s&redirect_uri=%s&" +
-            "duration=permanent&scope=identity"
+
+    private val _authUrl = "https://www.reddit.com/api/v1/authorize?client_id=%s&response_type=token&" +
+            "state=%s&redirect_uri=%s&scope=identity"
 
     private val _clientId = "pCYkCQhXhtAZ8AHGHGgzuA"
 
@@ -41,20 +43,23 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (intent != null && intent.action == Intent.ACTION_VIEW) {
             val uri = intent.data
+            var patchedUri = Uri.parse(uri.toString().replace('#', '?'))
             if (uri!!.getQueryParameter("error") != null) {
-                val error = uri.getQueryParameter("error")
+                val error = patchedUri.getQueryParameter("error")
                 Log.e(TAG, "An error has occurred : $error")
             } else {
-                val state = uri.getQueryParameter("state")
+                val state = patchedUri.getQueryParameter("state")
                 if (state == _state) {
-                    val code = uri.getQueryParameter("code")
-                    println("token : $code")
+                    val access_token = patchedUri.getQueryParameter("access_token")
+                    Log.d("ACCESS_TOKEN", "$access_token")
                     val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
-                        intent.putExtra("token", code);
+                        intent.putExtra("token", access_token)
                     }
                     startActivity(intent);
                 }
             }
         }
     }
+
+
 }
