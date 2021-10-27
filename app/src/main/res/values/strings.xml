@@ -9,6 +9,11 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_gallery">Search</string>
+    <string name="menu_slideshow">Profile</string>
+    <string name="HotBtn">Hot</string>
+    <string name="NewBtn">New</string>
+    <string name="BestBtn">Best</string>
+    <string name="CardTitle">Title</string>
+    <string name="CardDescription">This is a description</string>
 </resources>

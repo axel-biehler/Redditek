@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private val _authUrl = "https://www.reddit.com/api/v1/authorize?client_id=%s&response_type=token&" +
             "state=%s&redirect_uri=%s&scope=identity"
 
-    private val _clientId = "pCYkCQhXhtAZ8AHGHGgzuA"
+    private val _clientId = "u09m06bb1c4oeU06EYJH0A"
 
     private val _redirectUri = "http://www.reditech.local/my_redirect"
 
