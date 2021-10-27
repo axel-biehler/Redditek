@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.redditech.api.*
 
 import okhttp3.*
 
@@ -50,10 +51,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val state = patchedUri.getQueryParameter("state")
                 if (state == _state) {
-                    val access_token = patchedUri.getQueryParameter("access_token")
-                    Log.d("ACCESS_TOKEN", "$access_token")
+                    val accessToken = patchedUri.getQueryParameter("access_token")
+                    val viewModel: OverviewViewModel = OverviewViewModel()
+                    Log.d("ACCESS_TOKEN", accessToken.toString())
+                    viewModel.getUser(accessToken, this)
                     val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
-                        intent.putExtra("token", access_token)
+                        intent.putExtra("token", accessToken)
                     }
                     startActivity(intent);
                 }
