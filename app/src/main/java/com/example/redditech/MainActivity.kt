@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
             "&response_type=code&state=%s&redirect_uri=%s&" +
             "duration=permanent&scope=identity"
 
-    private val _clientId = "pCYkCQhXhtAZ8AHGHGgzuA"
+    private val _clientId = "u09m06bb1c4oeU06EYJH0A"
 
     private val _redirectUri = "http://www.reditech.local/my_redirect"
 
