@@ -17,6 +17,11 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,24 +32,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private val _authUrl = "https://www.reddit.com/api/v1/authorize.compact?client_id=%s&response_type=code&" +
-            "state=%s&redirect_uri=%s&duration=temporary&scope=identity"
+    private val AUTH_URL = "https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
+            "&response_type=code&state=%s&redirect_uri=%s&" +
+            "duration=permanent&scope=identity"
 
-    private val _clientId = "FjegaTqKa4vN2OoCi6gtxw"
+    private val CLIENT_ID = "xwZXxnD7i1F9CCQdASN-zw"
 
-    private val _redirectUri = "http://www.reditech.local/my_redirect"
+    private val REDIRECT_URI = "http://www.reditech.local/my_redirect"
 
-    private val _state = "continue"
+    private val STATE = "MY_RANDOM_STRING_1"
 
-    private val _accessUrl = "https://www.reddit.com/api/v1/access_token"
+    private val ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 
     fun startSignIn(view: View?) {
-        val url: String = java.lang.String.format(
-            _authUrl,
-            _clientId,
-            _state,
-            _redirectUri
-        )
+        val url = String.format(AUTH_URL, CLIENT_ID, STATE, REDIRECT_URI)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         startActivity(intent)
     }
@@ -53,54 +54,49 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if (intent != null && intent.action == Intent.ACTION_VIEW) {
             val uri = intent.data
-            var patchedUri = Uri.parse(uri.toString().replace('#', '?'))
             if (uri!!.getQueryParameter("error") != null) {
-                val error = patchedUri.getQueryParameter("error")
+                val error = uri.getQueryParameter("error")
                 Log.e(TAG, "An error has occurred : $error")
             } else {
-                val state = patchedUri.getQueryParameter("state")
-                if (state == _state) {
-                    val code = patchedUri.getQueryParameter("code")
-                    if (code != null) {
-                        Log.d(TAG, code)
-                    }
-                    val accessToken = getAccessToken(code)
-                    //val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
-                    //    intent.putExtra("token", code)
-                    //}
-                    //startActivity(intent);
+                val state = uri.getQueryParameter("state")
+                if (state == STATE) {
+                    val code = uri.getQueryParameter("code")
+                    getAccessToken(code)
                 }
             }
         }
     }
+                    //val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
+                    //    intent.putExtra("token", code)
+                    //}
+                    //startActivity(intent);
+
 
     private fun getAccessToken(code: String?) {
-        val countDownLatch = CountDownLatch(1)
         val client = OkHttpClient()
-        val authString = "$_clientId:"
-        val encodedAuthString: String = Base64.encodeToString(
+        val authString = "$CLIENT_ID:"
+        val encodedAuthString = Base64.encodeToString(
             authString.toByteArray(),
             Base64.NO_WRAP
         )
         val request = Request.Builder()
             .addHeader("User-Agent", "Sample App")
             .addHeader("Authorization", "Basic $encodedAuthString")
-            .url(_accessUrl)
-            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),
-                "grant_type=authorization_code&code=$code" +
-                        "&redirect_uri=$_redirectUri"))
-            .build();
-
+            .url(ACCESS_TOKEN_URL)
+            .post(
+                ("grant_type=authorization_code&code=" + code.toString() +
+                        "&redirect_uri=" + REDIRECT_URI
+                        ).toRequestBody("application/x-www-form-urlencoded".toMediaTypeOrNull())
+            )
+            .build()
         client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call?, e: IOException) {
+            override fun onFailure(call: Call, e: IOException) {
                 Log.e(TAG, "ERROR: $e")
-                countDownLatch.countDown()
             }
 
             @Throws(IOException::class)
-            override fun onResponse(call: Call?, response: Response) {
-                val json = response.body()!!.string()
-                Log.d(TAG, json)
+            override fun onResponse(call: Call, response: Response) {
+                val json = response.body!!.string()
                 var data: JSONObject? = null
                 try {
                     data = JSONObject(json)
@@ -108,13 +104,10 @@ class MainActivity : AppCompatActivity() {
                     val refreshToken = data.optString("refresh_token")
                     Log.d(TAG, "Access Token = $accessToken")
                     Log.d(TAG, "Refresh Token = $refreshToken")
-                    countDownLatch.countDown()
                 } catch (e: JSONException) {
                     e.printStackTrace()
-                    countDownLatch.countDown()
                 }
             }
         })
-        countDownLatch.await()
     }
 }
