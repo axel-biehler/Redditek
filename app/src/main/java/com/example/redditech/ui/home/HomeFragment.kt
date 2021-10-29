@@ -17,9 +17,11 @@ import com.example.redditech.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.fragment_home.*;
 
 class HomeFragment : Fragment() {
-
+    private var subsList = mutableListOf<String>()
+    private var usersList = mutableListOf<String>()
     private var titlesList = mutableListOf<String>()
     private var descList = mutableListOf<String>()
+    private var imagesSubsList = mutableListOf<Int>()
     private var imagesList = mutableListOf<Int>()
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
@@ -53,19 +55,22 @@ class HomeFragment : Fragment() {
             // RecyclerView behavior
             layoutManager = LinearLayoutManager(activity)
             // set the custom adapter to the RecyclerView
-            adapter = RecyclerAdapter(titlesList, descList, imagesList)
+            adapter = RecyclerAdapter(subsList, usersList, titlesList, descList, imagesList, imagesSubsList)
         }
     }
 
-    private fun addToList(title: String, description: String, image: Int) {
+    private fun addToList(sub: String, user: String, title: String, description: String, image: Int, subImage: Int) {
+        subsList.add(sub)
+        usersList.add(user)
         titlesList.add(title)
         descList.add(description)
         imagesList.add(image)
+        imagesSubsList.add(subImage)
     }
 
     private fun postToList() {
         for (i in 1..25) {
-            addToList("Title $i", "Description $i", R.mipmap.ic_launcher_round)
+            addToList("Sub $i", "User $i", "Title $i", "Description $i", R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round)
         }
     }
 
