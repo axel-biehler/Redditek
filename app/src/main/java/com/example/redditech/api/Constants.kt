@@ -1,4 +1,3 @@
 package com.example.redditech.api
 
-class SessionManager {
-}
+data class Constants()
