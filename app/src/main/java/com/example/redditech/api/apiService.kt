@@ -45,5 +45,5 @@ private fun okhttpClient(context: Context, token: String?): OkHttpClient {
 
 interface ApiService {
     @GET("api/v1/me")
-    suspend fun getUser(): String
+    suspend fun getUser(): User
 }

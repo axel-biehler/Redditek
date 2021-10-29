@@ -8,20 +8,13 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.example.redditech.api.*
-
 import okhttp3.*
-import okhttp3.OkHttpClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
-
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CountDownLatch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class MainActivity : AppCompatActivity() {
@@ -44,6 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     private val ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 
+    private var _token = ""
+
     fun startSignIn(view: View?) {
         val url = String.format(AUTH_URL, CLIENT_ID, STATE, REDIRECT_URI)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -62,17 +57,17 @@ class MainActivity : AppCompatActivity() {
                 if (state == STATE) {
                     val code = uri.getQueryParameter("code")
                     getAccessToken(code)
+                    val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
+                        intent.putExtra("token", _token)
+                    }
+                    startActivity(intent);
                 }
             }
         }
     }
-                    //val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
-                    //    intent.putExtra("token", code)
-                    //}
-                    //startActivity(intent);
-
 
     private fun getAccessToken(code: String?) {
+        val countDownLatch = CountDownLatch(1)
         val client = OkHttpClient()
         val authString = "$CLIENT_ID:"
         val encodedAuthString = Base64.encodeToString(
@@ -89,9 +84,11 @@ class MainActivity : AppCompatActivity() {
                         ).toRequestBody("application/x-www-form-urlencoded".toMediaTypeOrNull())
             )
             .build()
+        val token: String
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e(TAG, "ERROR: $e")
+                countDownLatch.countDown()
             }
 
             @Throws(IOException::class)
@@ -100,14 +97,20 @@ class MainActivity : AppCompatActivity() {
                 var data: JSONObject? = null
                 try {
                     data = JSONObject(json)
-                    val accessToken = data.optString("access_token")
-                    val refreshToken = data.optString("refresh_token")
-                    Log.d(TAG, "Access Token = $accessToken")
-                    Log.d(TAG, "Refresh Token = $refreshToken")
+                    setAccessToken(data.optString("access_token"))
+                    Log.d(TAG, "Access Token = $_token")
+                    countDownLatch.countDown()
                 } catch (e: JSONException) {
                     e.printStackTrace()
+                    countDownLatch.countDown()
                 }
             }
         })
+        countDownLatch.await()
     }
+
+    fun setAccessToken(token: String) {
+        _token = token
+    }
+
 }
