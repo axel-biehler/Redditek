@@ -1,3 +1,9 @@
 package com.example.redditech.api
 
-data class Constants()
+
+object Constants {
+
+    // Endpoints
+    const val BASE_URL = "https://oauth.reddit.com/"
+    const val PROFILE = "api/v1/me"
+}

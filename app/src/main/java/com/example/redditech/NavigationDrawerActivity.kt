@@ -1,31 +1,27 @@
 package com.example.redditech
 
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.widget.LinearLayout
-import android.widget.TextView
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import com.example.redditech.api.AuthInterceptor
-import com.example.redditech.api.OverviewViewModel
+import com.example.redditech.api.ApiClient
+import com.example.redditech.api.User
 import com.example.redditech.databinding.ActivityNavigationDrawerBinding
+import com.google.android.material.navigation.NavigationView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class NavigationDrawerActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationDrawerBinding
-    private lateinit var authinterceptor: AuthInterceptor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,15 +57,18 @@ class NavigationDrawerActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun setUserInfo() {
-        val overviewViewModel = OverviewViewModel()
-        val token: String = intent.getStringExtra("token")?.let { Log.d("USER", it) }.toString()
-        var text = findViewById<TextView>(R.id.nav_header)
-        overviewViewModel.getUser(token, this).observe(this, Observer {
-            user ->
+    private fun setUserInfo() {
+        val apiClient = ApiClient()
+        apiClient.getApiService(this).fetchPosts()
+            .enqueue(object : Callback<User> {
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    // Error fetching posts
+                }
 
-            //text.text = user.name
-        })
-
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    val user: User? = response.body()
+                    
+                }
+            })
     }
 }

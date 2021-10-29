@@ -8,6 +8,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.redditech.api.SessionManager
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -57,6 +58,8 @@ class MainActivity : AppCompatActivity() {
                 if (state == STATE) {
                     val code = uri.getQueryParameter("code")
                     getAccessToken(code)
+                    val sessionManager = SessionManager(this)
+                    sessionManager.saveAuthToken(_token)
                     val intent = Intent(this, NavigationDrawerActivity::class.java).apply {
                         intent.putExtra("token", _token)
                     }

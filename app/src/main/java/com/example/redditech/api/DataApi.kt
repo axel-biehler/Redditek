@@ -1,3 +1,8 @@
 package com.example.redditech.api
 
-data class DataApi()
+import com.google.gson.annotations.SerializedName
+
+data class User (
+    @SerializedName("name")
+    var username: String,
+)
