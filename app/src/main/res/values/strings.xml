@@ -16,4 +16,5 @@
     <string name="BestBtn">Best</string>
     <string name="CardTitle">Title</string>
     <string name="CardDescription">This is a description</string>
+    <string name="sign_in_with_reddit">Sign in with reddit</string>
 </resources>
