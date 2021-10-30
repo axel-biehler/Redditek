@@ -4,11 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.gallery.GalleryFragment">
+    tools:context=".ui.gallery.GalleryFragment"
+    android:background="#DEDEDE">
 
     <SearchView
-        android:layout_width="409dp"
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
         android:layout_height="53dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="3dp" />
+        android:background="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_bar"
+        tools:itemCount="17"
+        tools:listitem="@layout/item_search_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

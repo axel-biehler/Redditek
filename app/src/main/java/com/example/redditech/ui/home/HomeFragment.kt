@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
 
     private fun postToList() {
         for (i in 1..25) {
-            addToList("Sub $i", "User $i", "Title $i", "Description $i", R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round)
+            addToList("Sub $i", "User $i", "Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title $i", "Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description $i", R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round)
         }
     }
 

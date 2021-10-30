@@ -20,4 +20,9 @@
     <string name="user_name_str">user_name_str</string>
     <string name="post_title_str">post_title_str</string>
     <string name="post_description_str">post_description_str</string>
+    <string name="settings">Settings</string>
+    <string name="best">Best</string>
+    <string name="hot">Hot</string>
+    <string name="top">Top</string>
+    <string name="sub_name_search_str">sub_name_search_str</string>
 </resources>

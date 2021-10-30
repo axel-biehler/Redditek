@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/user_name_str"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/grey"
                 android:textSize="8sp" />
 
             <TextView
@@ -68,19 +68,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/post_description_str"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/grey"
                 android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/post_image"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
                 android:src="@mipmap/ic_launcher_round"/>
 
             <VideoView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:id="@+id/post_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"/>
 
         </LinearLayout>
 
