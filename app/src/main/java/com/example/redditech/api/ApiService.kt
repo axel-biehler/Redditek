@@ -1,10 +1,14 @@
 package com.example.redditech.api
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.Url
 
 interface ApiService {
     @GET(Constants.PROFILE)
-    fun fetchPosts(): Call<User>
+    fun userInfo(): Call<User>
+
+    @GET
+    fun getAvatar(@Url url: String?): Call<ResponseBody>
 }

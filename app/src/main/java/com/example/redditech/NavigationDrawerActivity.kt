@@ -1,8 +1,8 @@
 package com.example.redditech
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -14,14 +14,19 @@ import com.example.redditech.api.ApiClient
 import com.example.redditech.api.User
 import com.example.redditech.databinding.ActivityNavigationDrawerBinding
 import com.google.android.material.navigation.NavigationView
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.graphics.BitmapFactory
+import android.widget.ImageView
+
 
 class NavigationDrawerActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationDrawerBinding
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,16 +64,37 @@ class NavigationDrawerActivity : AppCompatActivity() {
 
     private fun setUserInfo() {
         val apiClient = ApiClient()
-        apiClient.getApiService(this).fetchPosts()
+        apiClient.getApiService(this).userInfo()
             .enqueue(object : Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     // Error fetching posts
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    val user: User? = response.body()
-                    
+                    val textView = findViewById<TextView>(R.id.nav_header)
+                    val user = response.body()
+
+                    textView.text = user?.username
+                    getImage(user?.avatar)
                 }
             })
+    }
+
+    private fun getImage(url: String?) {
+        val apiClient = ApiClient()
+        apiClient.getApiService(this).getAvatar(url).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                val bytes: ByteArray = response.body()!!.bytes()
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                val imageView = findViewById<ImageView>(R.id.imageViewAvatar)
+
+                imageView.setImageBitmap(bitmap);
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
