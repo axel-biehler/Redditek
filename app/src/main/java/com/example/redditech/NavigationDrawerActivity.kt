@@ -1,5 +1,6 @@
 package com.example.redditech
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
@@ -19,7 +20,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.ImageView
+import com.example.redditech.api.Constants
+import com.example.redditech.api.ResponsePost
 
 
 class NavigationDrawerActivity : AppCompatActivity() {
@@ -49,6 +53,7 @@ class NavigationDrawerActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         setUserInfo()
+        //getBestPublication(3, "null")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -74,8 +79,8 @@ class NavigationDrawerActivity : AppCompatActivity() {
                     val textView = findViewById<TextView>(R.id.nav_header)
                     val user = response.body()
 
-                    textView.text = user?.username
-                    getImage(user?.avatar)
+                    textView.text = user?.name
+                    //getImage(user?.avatar)
                 }
             })
     }
@@ -92,6 +97,23 @@ class NavigationDrawerActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    private fun getBestPublication(limit: Number, after: String) {
+        val apiClient = ApiClient()
+
+        apiClient.getApiService(this).getBestPublicationList(
+            Constants.BASE_URL +
+                    "${Constants.PUBLICATION_BEST}?limit=$limit&after=$after").enqueue(object : Callback<ResponsePost> {
+            override fun onResponse(call: Call<ResponsePost>, response: Response<ResponsePost>) {
+                Log.d("REQUEST", "On response success")
+            }
+
+            override fun onFailure(call: Call<ResponsePost>, t: Throwable) {
                 TODO("Not yet implemented")
             }
 

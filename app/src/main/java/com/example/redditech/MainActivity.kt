@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val AUTH_URL = "https://www.reddit.com/api/v1/authorize.compact?client_id=%s" +
             "&response_type=code&state=%s&redirect_uri=%s&" +
-            "duration=permanent&scope=identity"
+            "duration=permanent&scope=identity mysubreddits read"
 
     private val CLIENT_ID = "xwZXxnD7i1F9CCQdASN-zw"
 

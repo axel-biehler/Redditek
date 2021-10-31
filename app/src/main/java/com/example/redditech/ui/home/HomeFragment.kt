@@ -1,6 +1,7 @@
 package com.example.redditech.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redditech.R
+import com.example.redditech.api.ApiClient
+import com.example.redditech.api.Constants
+import com.example.redditech.api.ResponsePost
 import com.example.redditech.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.fragment_home.*;
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
     private var subsList = mutableListOf<String>()
