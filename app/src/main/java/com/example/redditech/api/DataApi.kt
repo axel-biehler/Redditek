@@ -14,28 +14,30 @@ data class User (
 data class Post(
     @field:Json(name = "kind") val kind: String,
     @field:Json(name = "data") val data: PostData,
-    @field:Json(name = "ups") val ups: String,
-    @field:Json(name = "downs") val downs: String,
 )
 
 data class PostData(
     @field:Json(name = "subreddit") val subreddit: String,
     @field:Json(name = "selftext") val selftext: String,
     @field:Json(name = "title") val title: String,
+    @field:Json(name = "ups") val ups: String,
+    @field:Json(name = "downs") val downs: String,
 )
 
 data class PagePostData(
     @field:Json(name = "after") val after: String,
-    @field:Json(name = "dist") val dist: Number,
+    @field:Json(name = "dist") val dist: String,
     @field:Json(name = "children") val children: List<Post>,
     @field:Json(name = "before") val before: String
+
 )
 
 data class ResponsePost(
-    @field:Json(name = "data") val data: PagePostData
+    @field:Json(name = "data") val data: PagePostData,
+    @field:Json(name = "kind") val kind: String
 )
 
-class PostListAdapter {
+/*class PostListAdapter {
     @FromJson
     fun fromJson(reader: JsonReader, delegate: JsonAdapter<Post>): List<Post> {
         val list = ArrayList<Post>()
@@ -48,4 +50,4 @@ class PostListAdapter {
         reader.endObject()
         return list
     }
-}
+}*/
