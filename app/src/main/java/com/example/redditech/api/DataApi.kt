@@ -36,18 +36,3 @@ data class ResponsePost(
     @field:Json(name = "data") val data: PagePostData,
     @field:Json(name = "kind") val kind: String
 )
-
-/*class PostListAdapter {
-    @FromJson
-    fun fromJson(reader: JsonReader, delegate: JsonAdapter<Post>): List<Post> {
-        val list = ArrayList<Post>()
-
-        reader.beginObject()
-        while (reader.hasNext()) {
-            reader.skipName()
-            delegate.fromJson(reader)?.let { list.add(it) }
-        }
-        reader.endObject()
-        return list
-    }
-}*/

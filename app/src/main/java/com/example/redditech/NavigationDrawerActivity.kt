@@ -1,8 +1,10 @@
 package com.example.redditech
 
-import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -12,25 +14,23 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.redditech.api.ApiClient
+import com.example.redditech.api.Constants
+import com.example.redditech.api.ResponsePost
 import com.example.redditech.api.User
 import com.example.redditech.databinding.ActivityNavigationDrawerBinding
 import com.google.android.material.navigation.NavigationView
-import okhttp3.ResponseBody
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.graphics.BitmapFactory
-import android.util.Log
-import android.widget.ImageView
-import com.example.redditech.api.Constants
-import com.example.redditech.api.ResponsePost
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class NavigationDrawerActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityNavigationDrawerBinding
-    private lateinit var user: User
+    private lateinit var _user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,29 +78,15 @@ class NavigationDrawerActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     val textView = findViewById<TextView>(R.id.nav_header)
                     val user = response.body()
+                    val imageNav = findViewById<ImageView>(R.id.imageViewAvatar)
 
-                    textView.text = user?.name
-                    getImage(user?.avatar)
+                    if (user != null) {
+                        _user = user
+                        textView.text = user.name
+                        Picasso.get().load(user.avatar).into(imageNav)
+                    }
                 }
             })
-    }
-
-    private fun getImage(url: String?) {
-        val apiClient = ApiClient()
-        apiClient.getApiService(this).getAvatar(url).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                val bytes: ByteArray = response.body()!!.bytes()
-                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                val imageView = findViewById<ImageView>(R.id.imageViewAvatar)
-
-                imageView.setImageBitmap(bitmap);
-            }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("IMAGE", "failed")
-            }
-
-        })
     }
 
     private fun getBestPublication(limit: Number, after: String) {
@@ -120,5 +106,9 @@ class NavigationDrawerActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    fun getUser(): User {
+        return _user
     }
 }
