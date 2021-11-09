@@ -7,4 +7,5 @@ object Constants {
     const val BASE_URL = "https://oauth.reddit.com/"
     const val PROFILE = "api/v1/me"
     const val PUBLICATION_BEST = "best"
+    const val SETTINGS = "api/v1/me/prefs"
 }
