@@ -29,4 +29,5 @@
     <string name="avatarprofile">AvatarProfile</string>
     <string name="username">test</string>
     <string name="description">description</string>
+    <string name="profile_picture">profile picture</string>
 </resources>

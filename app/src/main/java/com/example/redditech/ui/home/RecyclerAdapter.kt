@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redditech.R
 import com.example.redditech.api.Post
+import com.squareup.picasso.Picasso
 
 class RecyclerAdapter(private var posts: List<Post>):
 RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
@@ -32,8 +33,8 @@ RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
         holder.itemUser.text = posts[position].data.author
         holder.itemTitle.text = posts[position].data.title
         holder.itemDetail.text = posts[position].data.selftext
-        //holder.itemPicture.setImageResource(images[position])
-        //holder.itemImage.setImageResource(imagesPost[position])
+        Picasso.get().load(posts[position].data.header_img).into(holder.itemPicture)
+        Picasso.get().load(posts[position].data.url).into(holder.itemImage)
     }
 
     override fun getItemCount(): Int {

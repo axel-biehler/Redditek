@@ -11,4 +11,7 @@ interface ApiService {
 
     @GET
     fun getBestPublicationList(@Url url: String?): Call<ResponsePost>
+
+    @GET
+    fun getSubredditInfo(@Url url: String?): Call<Subreddit>
 }

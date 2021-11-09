@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
 
-        getBestPublication(3, _after)
+        getBestPublication(9, _after)
     }
 
     private fun addToList(post: Post) {
@@ -108,6 +108,23 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<ResponsePost>, t: Throwable) {
                 Log.d("REQUEST PUBLICATION", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getSubredditInfo(name:String) {
+        val apiClient = ApiClient()
+        val activity: NavigationDrawerActivity = getActivity() as NavigationDrawerActivity
+
+        apiClient.getApiService(activity).getSubredditInfo("${Constants.BASE_URL}" +
+                "r/$name/about").enqueue(object : Callback<Subreddit> {
+            override fun onResponse(call: Call<Subreddit>, response: Response<Subreddit>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFailure(call: Call<Subreddit>, t: Throwable) {
+                TODO("Not yet implemented")
             }
 
         })

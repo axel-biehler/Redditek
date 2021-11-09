@@ -22,7 +22,17 @@ data class PostData(
     @field:Json(name = "title") val title: String,
     @field:Json(name = "ups") val ups: String,
     @field:Json(name = "downs") val downs: String,
-    @field:Json(name = "author") val author: String
+    @field:Json(name = "author") val author: String,
+    @field:Json(name = "header_img") val header_img: String,
+    @field:Json(name = "url") val url: String,
+)
+
+data class Subreddit(
+    @field:Json(name = "data") val data: SubredditData
+)
+
+data class SubredditData(
+    @field:Json(name = "icon_img") val icon_img: String
 )
 
 data class PagePostData(
