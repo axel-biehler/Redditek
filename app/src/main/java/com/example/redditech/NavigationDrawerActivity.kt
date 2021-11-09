@@ -53,7 +53,6 @@ class NavigationDrawerActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         setUserInfo()
-        getBestPublication(3, "null")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -89,26 +88,8 @@ class NavigationDrawerActivity : AppCompatActivity() {
             })
     }
 
-    private fun getBestPublication(limit: Number, after: String) {
-        val apiClient = ApiClient()
-
-        apiClient.getApiService(this).getBestPublicationList(
-            Constants.BASE_URL +
-                    "${Constants.PUBLICATION_BEST}?limit=$limit&after=$after").enqueue(object : Callback<ResponsePost> {
-            override fun onResponse(call: Call<ResponsePost>, response: Response<ResponsePost>) {
-                val postPage: ResponsePost = response.body()!!
-
-                Log.d("RESPONSE", postPage.data.after)
-            }
-
-            override fun onFailure(call: Call<ResponsePost>, t: Throwable) {
-                Log.d("REQUEST PUBLICATION", t.message.toString())
-            }
-
-        })
-    }
-
     fun getUser(): User {
         return _user
     }
+
 }

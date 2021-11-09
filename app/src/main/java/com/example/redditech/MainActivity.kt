@@ -8,6 +8,9 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.redditech.api.ApiClient
+import com.example.redditech.api.Constants
+import com.example.redditech.api.ResponsePost
 import com.example.redditech.api.SessionManager
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     private val ACCESS_TOKEN_URL = "https://www.reddit.com/api/v1/access_token"
 
     private var _token = ""
+
+    private lateinit var responsePost: ResponsePost;
 
     fun startSignIn(view: View?) {
         val url = String.format(AUTH_URL, CLIENT_ID, STATE, REDIRECT_URI)
@@ -114,6 +119,32 @@ class MainActivity : AppCompatActivity() {
 
     fun setAccessToken(token: String) {
         _token = token
+    }
+
+    private fun getBestPublication(limit: Number, after: String) {
+        val apiClient = ApiClient()
+
+        apiClient.getApiService(this).getBestPublicationList(
+            Constants.BASE_URL +
+                    "${Constants.PUBLICATION_BEST}?limit=$limit&after=$after").enqueue(object :
+            retrofit2.Callback<ResponsePost> {
+            override fun onResponse(call: retrofit2.Call<ResponsePost>, response: retrofit2.Response<ResponsePost>) {
+                val postPage: ResponsePost = response.body()!!
+
+                responsePost = postPage;
+
+                Log.d("RESPONSE", postPage.data.after)
+            }
+
+            override fun onFailure(call: retrofit2.Call<ResponsePost>, t: Throwable) {
+                Log.d("REQUEST PUBLICATION", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getPosts() : ResponsePost {
+        return responsePost;
     }
 
 }

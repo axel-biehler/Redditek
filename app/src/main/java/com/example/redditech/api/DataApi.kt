@@ -22,6 +22,7 @@ data class PostData(
     @field:Json(name = "title") val title: String,
     @field:Json(name = "ups") val ups: String,
     @field:Json(name = "downs") val downs: String,
+    @field:Json(name = "author") val author: String
 )
 
 data class PagePostData(
