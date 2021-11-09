@@ -3,7 +3,7 @@
     <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title"></string>
+    <string name="nav_header_title" />
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -27,4 +27,8 @@
     <string name="sub_name_search_str">sub_name_search_str</string>
     <string name="sign_in_with_reddit">Sign in with reddit</string>
     <string name="subscribe">Subscribe</string>
+    <string name="avatarprofile">AvatarProfile</string>
+    <string name="username">test</string>
+    <string name="description">description</string>
+    <string name="profile_picture">profile picture</string>
 </resources>

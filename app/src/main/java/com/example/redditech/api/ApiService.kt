@@ -10,8 +10,8 @@ interface ApiService {
     fun userInfo(): Call<User>
 
     @GET
-    fun getAvatar(@Url url: String?): Call<ResponseBody>
+    fun getBestPublicationList(@Url url: String?): Call<ResponsePost>
 
     @GET
-    fun getBestPublicationList(@Url url: String?): Call<ResponsePost>
+    fun getSubredditInfo(@Url url: String?): Call<Subreddit>
 }

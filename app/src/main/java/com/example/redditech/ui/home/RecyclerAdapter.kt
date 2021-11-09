@@ -7,8 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.redditech.R
+import com.example.redditech.api.Post
+import com.squareup.picasso.Picasso
 
-class RecyclerAdapter(private var subs: List<String>, private var users: List<String>, private var titles: List<String>, private var details: List<String>, private var images: List<Int>, private var imagesPost: List<Int>):
+class RecyclerAdapter(private var posts: List<Post>):
 RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,15 +29,17 @@ RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemSub.text = subs[position]
-        holder.itemUser.text = users[position]
-        holder.itemTitle.text = titles[position]
-        holder.itemDetail.text = details[position]
-        holder.itemPicture.setImageResource(images[position])
-        holder.itemImage.setImageResource(imagesPost[position])
+        holder.itemSub.text = posts[position].data.subreddit
+        holder.itemUser.text = posts[position].data.author
+        holder.itemTitle.text = posts[position].data.title
+        holder.itemDetail.text = posts[position].data.selftext
+        Picasso.get().load(posts[position].data.header_img).into(holder.itemPicture)
+        Picasso.get().load(posts[position].data.url).into(holder.itemImage)
     }
 
     override fun getItemCount(): Int {
-        return titles.size
+        return posts.size
     }
+
+
 }

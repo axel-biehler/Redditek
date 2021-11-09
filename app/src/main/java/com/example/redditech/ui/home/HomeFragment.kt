@@ -5,35 +5,32 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.redditech.MainActivity
+import com.example.redditech.NavigationDrawerActivity
 import com.example.redditech.R
-import com.example.redditech.api.ApiClient
-import com.example.redditech.api.Constants
-import com.example.redditech.api.ResponsePost
+import com.example.redditech.api.*
 import com.example.redditech.databinding.FragmentHomeBinding
-import kotlinx.android.synthetic.main.fragment_home.*;
+import kotlinx.android.synthetic.main.fragment_home.*
+import okhttp3.internal.notify
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragment : Fragment() {
-    private var subsList = mutableListOf<String>()
-    private var usersList = mutableListOf<String>()
-    private var titlesList = mutableListOf<String>()
-    private var descList = mutableListOf<String>()
-    private var imagesSubsList = mutableListOf<Int>()
-    private var imagesList = mutableListOf<Int>()
+    private var postList = mutableListOf<Post>()
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<RecyclerAdapter.ViewHolder>? = null
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var scrollListener: RecyclerView.OnScrollListener
+    private lateinit var recycler: RecyclerView
     private var _binding: FragmentHomeBinding? = null
+    private var _after: String = "null"
+    private var waiting = false
 
 
     // This property is only valid between onCreateView and
@@ -50,39 +47,102 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        postToList()
 
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        val recyclerView: RecyclerView = root.findViewById(R.id.rv_recyclerView)
+
+        recycler = recyclerView
+        setRecyclerViewScrollListener()
+
+        return root
     }
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
-        rv_recyclerView.apply {
-            // set a LinearLayoutManager to handle Android
-            // RecyclerView behavior
-            layoutManager = LinearLayoutManager(activity)
-            // set the custom adapter to the RecyclerView
-            adapter = RecyclerAdapter(subsList, usersList, titlesList, descList, imagesList, imagesSubsList)
+
+        getBestPublication(9, _after)
+    }
+
+    private fun addToList(post: Post) {
+        postList.add(post)
+    }
+
+    private fun postToList(posts: ResponsePost) {
+        for (i in posts.data.children) {
+            addToList(i)
         }
     }
 
-    private fun addToList(sub: String, user: String, title: String, description: String, image: Int, subImage: Int) {
-        subsList.add(sub)
-        usersList.add(user)
-        titlesList.add(title)
-        descList.add(description)
-        imagesList.add(image)
-        imagesSubsList.add(subImage)
-    }
 
-    private fun postToList() {
-        for (i in 1..25) {
-            addToList("Sub $i", "User $i", "Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title $i", "Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description Description $i", R.mipmap.ic_launcher_round, R.mipmap.ic_launcher_round)
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun getBestPublication(limit: Number, after: String) {
+        val apiClient = ApiClient()
+        val activity: NavigationDrawerActivity = getActivity() as NavigationDrawerActivity
+
+
+        apiClient.getApiService(activity).getBestPublicationList(
+            Constants.BASE_URL +
+                    "${Constants.PUBLICATION_BEST}?limit=$limit&after=$after").enqueue(object :
+            Callback<ResponsePost> {
+            override fun onResponse(call: Call<ResponsePost>, response: Response<ResponsePost>) {
+                val postPage: ResponsePost = response.body()!!
+                postToList(postPage)
+                if (_after == "null") {
+                    rv_recyclerView.apply {
+                        // set a LinearLayoutManager to handle Android
+                        // RecyclerView behavior
+                        layoutManager = LinearLayoutManager(activity)
+                        // set the custom adapter to the RecyclerView
+
+                        adapter = RecyclerAdapter(postList)
+                    }
+                }
+                _after = postPage.data.after
+                waiting = false
+                recycler.adapter?.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<ResponsePost>, t: Throwable) {
+                Log.d("REQUEST PUBLICATION", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getSubredditInfo(name:String) {
+        val apiClient = ApiClient()
+        val activity: NavigationDrawerActivity = getActivity() as NavigationDrawerActivity
+
+        apiClient.getApiService(activity).getSubredditInfo("${Constants.BASE_URL}" +
+                "r/$name/about").enqueue(object : Callback<Subreddit> {
+            override fun onResponse(call: Call<Subreddit>, response: Response<Subreddit>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFailure(call: Call<Subreddit>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    private fun setRecyclerViewScrollListener() {
+        scrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0 && !waiting) {
+                    waiting = true
+                    getBestPublication(3, _after)
+                    Log.d("END", "gere")
+                }
+            }
+        }
+        recycler.addOnScrollListener(scrollListener)
+    }
+
 }
