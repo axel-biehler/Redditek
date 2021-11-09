@@ -1,4 +1,4 @@
-package com.example.redditech.ui
+package com.example.redditech.ui.Sub
 
 import androidx.lifecycle.ViewModel
 
