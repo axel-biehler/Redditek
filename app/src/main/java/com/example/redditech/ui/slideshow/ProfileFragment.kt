@@ -40,7 +40,7 @@ class ProfileFragment : Fragment() {
 
         Picasso.get().load(user.avatar).into(image)
         textUser.text = user.name
-        textDescription.text = user.description
+        textDescription.text = user.subreddit.public_description
 
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root

@@ -8,8 +8,13 @@ import com.squareup.moshi.JsonReader
 data class User (
     @field:Json(name = "name") val name: String,
     @field:Json(name = "snoovatar_img") val avatar: String,
-    @field:Json(name = "description") val description : String
+    @field:Json(name = "description") val description : String,
+    @field:Json(name = "subreddit") val subreddit: Profile,
 )
+
+data class Profile (
+    @field:Json(name = "public_description") val public_description: String,
+        )
 
 data class Post(
     @field:Json(name = "kind") val kind: String,
