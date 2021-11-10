@@ -33,7 +33,6 @@ RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
         holder.itemUser.text = posts[position].data.author
         holder.itemTitle.text = posts[position].data.title
         holder.itemDetail.text = posts[position].data.selftext
-        Picasso.get().load(posts[position].data.header_img).into(holder.itemPicture)
         Picasso.get().load(posts[position].data.url).into(holder.itemImage)
     }
 
