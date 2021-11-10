@@ -4,10 +4,13 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.findFragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -18,6 +21,7 @@ import com.example.redditech.api.Constants
 import com.example.redditech.api.ResponsePost
 import com.example.redditech.api.User
 import com.example.redditech.databinding.ActivityNavigationDrawerBinding
+import com.example.redditech.ui.home.HomeFragment
 import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -90,6 +94,42 @@ class NavigationDrawerActivity : AppCompatActivity() {
 
     fun getUser(): User {
         return _user
+    }
+
+    fun selectBest(view: View) {
+        var homeFragment = view.findFragment<HomeFragment>()
+        var button = findViewById<Button>(R.id.buttonBest)
+        var button1 = findViewById<Button>(R.id.buttonHot)
+        var button2 = findViewById<Button>(R.id.buttonTop)
+
+        button.setBackgroundColor(getResources().getColor(R.color.orange_600))
+        button1.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        button2.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        homeFragment.setFilter("best")
+    }
+
+    fun selectTop(view: View) {
+        var homeFragment = view.findFragment<HomeFragment>()
+        var button = findViewById<Button>(R.id.buttonTop)
+        var button1 = findViewById<Button>(R.id.buttonHot)
+        var button2 = findViewById<Button>(R.id.buttonBest)
+
+        button.setBackgroundColor(getResources().getColor(R.color.orange_600))
+        button1.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        button2.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        homeFragment.setFilter("top")
+    }
+
+    fun selectHot(view: View) {
+        var homeFragment = view.findFragment<HomeFragment>()
+        var button = findViewById<Button>(R.id.buttonHot)
+        var button1 = findViewById<Button>(R.id.buttonBest)
+        var button2 = findViewById<Button>(R.id.buttonTop)
+
+        button.setBackgroundColor(getResources().getColor(R.color.orange_600))
+        button1.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        button2.setBackgroundColor(getResources().getColor(R.color.orange_200))
+        homeFragment.setFilter("hot")
     }
 
 }
