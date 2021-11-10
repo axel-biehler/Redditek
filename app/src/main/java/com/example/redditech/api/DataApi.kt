@@ -52,3 +52,12 @@ data class ResponsePost(
     @field:Json(name = "data") val data: PagePostData,
     @field:Json(name = "kind") val kind: String
 )
+
+data class GetterSettings(
+    @field:Json(name = "enable_followers") val enable_followers: Boolean,
+    @field:Json(name = "feed_recommendations_enabled") val feed_recommendations_enabled: Boolean,
+    @field:Json(name = "activity_relevant_ads") val activity_relevant_ads: Boolean,
+    @field:Json(name = "email_unsubscribe_all") val email_unsubscribe_all: Boolean,
+    @field:Json(name = "hide_from_robots") val hide_from_robots: Boolean,
+    @field:Json(name = "show_location_based_recommendations") val show_location_based_recommendations: Boolean
+)
