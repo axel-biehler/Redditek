@@ -31,6 +31,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var _after: String = "null"
     private var waiting = false
+    private var type: String = "best"
 
 
     // This property is only valid between onCreateView and
@@ -56,10 +57,10 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(itemView, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
 
-        getBestPublication(9, _after)
+        getBestPublication(4, _after, )
     }
 
     private fun addToList(post: Post) {
@@ -86,7 +87,7 @@ class HomeFragment : Fragment() {
 
         apiClient.getApiService(activity).getBestPublicationList(
             Constants.BASE_URL +
-                    "${Constants.PUBLICATION_BEST}?limit=$limit&after=$after").enqueue(object :
+                    "${type}?limit=$limit&after=$after").enqueue(object :
             Callback<ResponsePost> {
             override fun onResponse(call: Call<ResponsePost>, response: Response<ResponsePost>) {
                 val postPage: ResponsePost = response.body()!!
@@ -145,4 +146,10 @@ class HomeFragment : Fragment() {
         recycler.addOnScrollListener(scrollListener)
     }
 
+    fun setFilter(filter: String) {
+        _after = "null"
+        type = filter
+        postList.clear()
+        getBestPublication(4, "null")
+    }
 }
